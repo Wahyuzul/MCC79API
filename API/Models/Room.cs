@@ -4,11 +4,8 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace API.Models
 {
     [Table("tb_m_rooms")]
-    public class Room
+    public class Room : BaseEntity
     {
-        [Key]
-        public Guid Guid { get; set; }
-
         [Column("name", TypeName = "nvarchar(50)")]
         public string Name { get; set; }
 
@@ -18,10 +15,7 @@ namespace API.Models
         [Column("capacity")]
         public int Capacity { get; set; }
 
-        [Column("created_date")]
-        public DateTime CreatedDate { get; set; }
-
-        [Column("modified_date")]
-        public DateTime ModifiedDate { get; set; }
+        // Cardinality
+        public ICollection<Booking> Bookings { get; set; }
     }
 }
