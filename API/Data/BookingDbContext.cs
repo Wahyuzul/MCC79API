@@ -72,7 +72,6 @@ namespace API.Data
                         .WithOne(accountrole => accountrole.Role)
                         .HasForeignKey(accountrole => accountrole.RoleGuid);
 
-
             // Account - AccountRole (One to Many)
             modelBuilder.Entity<Account>()
                         .HasMany(account => account.AccountRoles)
