@@ -11,7 +11,7 @@ namespace API.Models
 
         // cardinality
 
-        public ICollection<AccountRole> AccountRoles { get; set; }
+        public ICollection<AccountRole>? AccountRoles { get; set; }
 
     }
 }

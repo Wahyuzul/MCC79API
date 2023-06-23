@@ -9,7 +9,6 @@ namespace API.Data
         {
 
         }
-
         // Table
         public DbSet<Account> Accounts { get; set; }
         public DbSet<AccountRole> AccountRoles { get; set; }
