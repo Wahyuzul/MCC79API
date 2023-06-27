@@ -1,4 +1,6 @@
-﻿namespace API.Contracts
+﻿using API.Models;
+
+namespace API.Contracts
 {
     public interface IGeneralRepository<TEntity>
     {
@@ -6,6 +8,7 @@
         TEntity? GetByGuid(Guid guid);
         TEntity? Create(TEntity entity);
         bool Update(TEntity entity);
-        bool Delete(Guid guid);
+        bool Delete(TEntity entity);
+        bool IsExist(Guid guid);
     }
 }
