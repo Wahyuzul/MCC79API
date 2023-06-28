@@ -12,7 +12,7 @@ namespace API.DTOs.Educations
         [Required]
         public string Degree { get; set; }
         [Required]
-        [Range(0,4, ErrorMessage = "GPA must between 0 and 4")]
+        [Range(0,4, ErrorMessage = "GPA must between 0 - 4")]
         public double GPA { get; set; }
         [Required]
         public Guid UniversityGuid { get; set; }
