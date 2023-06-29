@@ -1,10 +1,7 @@
 ﻿using API.Contracts;
 using API.DTOs.Accounts;
-using API.DTOs.Employees;
 using API.Models;
-using API.Repositories;
 using API.Utilities;
-using Microsoft.AspNetCore.Mvc;
 
 namespace API.Services
 {
@@ -145,7 +142,7 @@ namespace API.Services
                 return null;
             }
 
-            EmployeeService employeeService = new EmployeeService(_employeeRepository);
+            var employeeService = new EmployeeService(_employeeRepository);
             Employee employee = new Employee
             {
                 Guid = new Guid(),
@@ -160,6 +157,7 @@ namespace API.Services
                 CreatedDate = DateTime.Now,
                 ModifiedDate = DateTime.Now
             };
+
             var createdEmployee = _employeeRepository.Create(employee);
             if (createdEmployee is null)
             {
@@ -200,6 +198,7 @@ namespace API.Services
                 Password = Hashing.HashPassword(registerDto.Password),
             };
 
+
             var createdAccount = _accountRepository.Create(account);
             if (createdAccount is null)
             {
@@ -225,7 +224,6 @@ namespace API.Services
 
             return toDto;
         }
-
         public int GenerateOtp()
         {
 

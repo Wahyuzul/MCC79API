@@ -19,6 +19,7 @@ namespace API.Services
 
         public EmployeeService(IEmployeeRepository employeeRepository)
         {
+            _employeeRepository = employeeRepository;
         }
 
         public IEnumerable<GetEmployeeDto>? GetEmployee()
