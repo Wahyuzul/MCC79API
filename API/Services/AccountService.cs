@@ -1,8 +1,10 @@
 ﻿using API.Contracts;
 using API.DTOs.Accounts;
+using API.DTOs.Employees;
 using API.Models;
 using API.Repositories;
 using API.Utilities;
+using Microsoft.AspNetCore.Mvc;
 
 namespace API.Services
 {
@@ -36,6 +38,8 @@ namespace API.Services
                                                     Password = account.Password,
                                                     IsDeleted = account.IsDeleted,
                                                     IsUsed = account.IsUsed,
+                                                    Otp = account.OTP,
+                                                    ExpiredTime = account.ExpiredDate
                                                 }).ToList();
 
             return toDto; // Account found
@@ -65,8 +69,8 @@ namespace API.Services
             {
                 Guid = newAccountDto.Guid,
                 Password = Hashing.HashPassword(newAccountDto.Password),
-                OTP = newAccountDto.Otp,
-                IsUsed = true,
+                OTP = GenerateOtp(),
+                IsUsed = newAccountDto.IsUsed,
                 CreatedDate = DateTime.Now,
                 ModifiedDate = DateTime.Now
             };
@@ -136,6 +140,11 @@ namespace API.Services
 
         public RegisterAccountDto? Register(RegisterAccountDto registerDto)
         {
+            if (registerDto.Password != registerDto.ConfirmPassword)
+            {
+                return null;
+            }
+
             EmployeeService employeeService = new EmployeeService(_employeeRepository);
             Employee employee = new Employee
             {
@@ -191,11 +200,6 @@ namespace API.Services
                 Password = Hashing.HashPassword(registerDto.Password),
             };
 
-            if (registerDto.Password != registerDto.ConfirmPassword)
-            {
-                return null;
-            }
-
             var createdAccount = _accountRepository.Create(account);
             if (createdAccount is null)
             {
@@ -222,6 +226,48 @@ namespace API.Services
             return toDto;
         }
 
+        public int GenerateOtp()
+        {
+
+            Random random = new Random();
+            int otp = random.Next(100000, 999999);
+            return otp;
+
+        }
+
+        public ForgotPasswordDto ForgotPassword(string email)
+        {
+            var employee = _employeeRepository.GetAll().SingleOrDefault(employee => employee.Email == email);
+            if (employee is null)
+            {
+                return null;
+            }
+
+            var toDto = new ForgotPasswordDto
+            {
+                Email = employee.Email,
+                Otp = GenerateOtp(),
+                ExpireTime = DateTime.Now.AddMinutes(5)
+            };
+
+            var relatedAccount = _accountRepository.GetByGuid(employee.Guid);
+
+            var updateAccountDto = new Account
+            {
+                Guid = relatedAccount.Guid,
+                Password = relatedAccount.Password,
+                IsDeleted = (bool)relatedAccount.IsDeleted,
+                OTP = toDto.Otp,
+                IsUsed = false,
+                ExpiredDate = DateTime.Now.AddMinutes(5)
+            };
+
+            var updateResult = _accountRepository.Update(updateAccountDto);
+
+            return toDto;
+        }
+
     }
 }
+
 

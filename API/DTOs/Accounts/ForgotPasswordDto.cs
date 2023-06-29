@@ -8,7 +8,8 @@ namespace API.DTOs.Accounts
         [EmailAddress]
         public string Email { get; set; }
 
-        [Required]
         public int Otp { get; set; }
+
+        public DateTime ExpireTime { get; set; }
     }
 }

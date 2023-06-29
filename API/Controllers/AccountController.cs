@@ -4,6 +4,7 @@ using API.Models;
 using API.Services;
 using API.Utilities;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore.Infrastructure;
 using System.Net;
 
 namespace API.Controllers
@@ -13,12 +14,14 @@ namespace API.Controllers
     public class AccountController : ControllerBase
     {
         private readonly AccountService _service;
+        private readonly EmployeeService _employeeService;
 
-        public AccountController(AccountService service)
+        public AccountController(AccountService service, EmployeeService employee)
         {
             _service = service;
+            _employeeService = employee;
         }
-
+     
         [HttpGet]
         public IActionResult GetAll()
         {
@@ -173,5 +176,33 @@ namespace API.Controllers
                 Data = createdRegister
             });
         }
+
+        [HttpPost("forgot-password")]
+        public IActionResult ForgotPassword(string email)
+        {
+            var forgotPassword = _service.ForgotPassword(email);
+            if (forgotPassword is null)
+            {
+                return BadRequest(new ResponseHandler<ForgotPasswordDto>
+                {
+                    Code = StatusCodes.Status400BadRequest,
+                    Status = HttpStatusCode.BadRequest.ToString(),
+                    Message = "Email Not Found"
+                });
+            }
+
+            return Ok(new ResponseHandler<ForgotPasswordDto>
+            {
+                Code = StatusCodes.Status200OK,
+                Status = HttpStatusCode.OK.ToString(),
+                Message = "Otp is Generated",
+                Data = forgotPassword
+            });
+        }
+
+
+
+
+
     }
 }

@@ -10,6 +10,8 @@ namespace API.DTOs.Accounts
 
         [PasswordPolicy]
         public string Password { get; set; }
+        [Required]
+        public int Otp { get; set; }
 
         public bool IsDeleted { get; set; }
 
