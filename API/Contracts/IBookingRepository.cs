@@ -4,6 +4,6 @@ namespace API.Contracts
 {
     public interface IBookingRepository : IGeneralRepository<Booking>
     {
- 
+        //ICollection<BookingRoomToday> GetByDateNow();
     }
 }
