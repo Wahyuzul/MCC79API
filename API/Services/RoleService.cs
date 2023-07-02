@@ -34,7 +34,7 @@ namespace API.Services
             return toDto; // Roles found
         }
 
-        public IEnumerable<GetRoleDto>? GetRole(string name)
+        /*public IEnumerable<GetRoleDto>? GetRole(string name)
         {
             var roles = _roleRepository.GetByName(name);
             if (!roles.Any())
@@ -50,7 +50,7 @@ namespace API.Services
                  }).ToList();
 
             return toDto; // Rooms found
-        }
+        }*/
 
         public GetRoleDto? GetRole(Guid guid)
         {
