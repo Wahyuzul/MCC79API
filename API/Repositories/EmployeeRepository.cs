@@ -11,5 +11,14 @@ namespace API.Repositories
         {
         }
 
+        public Employee? GetEmail(string email)
+        {
+            return _context.Set<Employee>().SingleOrDefault(e => e.Email == email);
+        }
+
+        public Employee? GetByEmailAndPhoneNumber(string data)
+        {
+            return _context.Set<Employee>().FirstOrDefault(e => e.PhoneNumber == data || e.Email == data);
+        }
     }
 }
