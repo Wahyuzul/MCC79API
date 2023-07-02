@@ -9,9 +9,9 @@ namespace API.Repositories
         public RoleRepository(BookingDbContext context) : base(context)
         {
         }
-        public IEnumerable<Role> GetByName(string name)
+        public Role? GetByName(string name)
         {
-            return _context.Set<Role>().Where(role => role.Name.Contains(name));
+            return _context.Set<Role>().FirstOrDefault(role => role.Name == name);
         }
     }
 }
