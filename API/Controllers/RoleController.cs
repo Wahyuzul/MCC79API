@@ -135,7 +135,7 @@ namespace API.Controllers
             });
         }
 
-        [HttpGet("by-name/{name}")]
+        /*[HttpGet("by-name/{name}")]
         public IActionResult GetByName(string name)
         {
             var roles = _service.GetRole(name);
@@ -156,6 +156,6 @@ namespace API.Controllers
                 Message = "Roles found",
                 Data = roles
             });
-        }
+        }*/
     }
 }
