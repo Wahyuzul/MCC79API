@@ -20,9 +20,11 @@ namespace API.DTOs.Employees
         public DateTime HiringDate { get; set; }
 
         [EmailAddress]
+        [EmployeeDuplicateProperty("string", "Email")]
         public string Email { get; set; }
 
         [Phone]
+        [EmployeeDuplicateProperty("string", "PhoneNumber")]
         public string PhoneNumber { get; set; }
     }
 }
