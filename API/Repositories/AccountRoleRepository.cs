@@ -9,5 +9,11 @@ namespace API.Repositories
         public AccountRoleRepository(BookingDbContext context) : base(context)
         {
         }
+
+        public IEnumerable<AccountRole> GetAccountRolesByAccountGuid(Guid guid)
+        {
+            return _context.Set<AccountRole>().Where(ar => ar.AccountGuid == guid);
+        }
+
     }
 }
