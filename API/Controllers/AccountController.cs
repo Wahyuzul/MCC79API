@@ -3,14 +3,17 @@ using API.DTOs.Accounts;
 using API.Models;
 using API.Services;
 using API.Utilities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using System.Data;
 using System.Net;
 
 namespace API.Controllers
 {
     [ApiController]
     [Route("api/account")]
+    [Authorize(Roles = $"{nameof(RoleLevel.admin)}")]
     public class AccountController : ControllerBase
     {
         private readonly AccountService _service;
@@ -155,6 +158,7 @@ namespace API.Controllers
         }
         
         [HttpPost("register")]
+        [AllowAnonymous]
         public IActionResult Register(RegisterAccountDto register)
         {
             var createdRegister = _service.Register(register);
@@ -178,31 +182,126 @@ namespace API.Controllers
         }
 
         [HttpPost("forgot-password")]
-        public IActionResult ForgotPassword(string email)
+        [AllowAnonymous]
+        public IActionResult ForgotPassword(ForgotPasswordDto forgotPassword)
         {
-            var forgotPassword = _service.ForgotPassword(email);
-            if (forgotPassword is null)
-            {
-                return BadRequest(new ResponseHandler<ForgotPasswordDto>
+            var isUpdated = _service.ForgotPassword(forgotPassword);
+            if (isUpdated == 0)
+                return NotFound(new ResponseHandler<ForgotPasswordDto>
                 {
-                    Code = StatusCodes.Status400BadRequest,
-                    Status = HttpStatusCode.BadRequest.ToString(),
-                    Message = "Email Not Found"
+                    Code = StatusCodes.Status404NotFound,
+                    Status = HttpStatusCode.NotFound.ToString(),
+                    Message = "Email not found"
                 });
-            }
+
+            if (isUpdated is -1)
+                return StatusCode(StatusCodes.Status500InternalServerError, new ResponseHandler<ForgotPasswordDto>
+                {
+                    Code = StatusCodes.Status500InternalServerError,
+                    Status = HttpStatusCode.InternalServerError.ToString(),
+                    Message = "Error retrieving data from the database"
+                });
 
             return Ok(new ResponseHandler<ForgotPasswordDto>
             {
                 Code = StatusCodes.Status200OK,
                 Status = HttpStatusCode.OK.ToString(),
-                Message = "Otp is Generated",
-                Data = forgotPassword
+                Message = "Otp has been sent to your email"
             });
         }
 
+        [AllowAnonymous]
+        [HttpPost("Login")]
+        public IActionResult Login(LoginAccountDto login)
+        {
+            var entities = _service.Login(login);
+            if (entities is "-1")
+            {
+                return NotFound(new ResponseHandler<LoginAccountDto>
+                {
+                    Code = StatusCodes.Status400BadRequest,
+                    Status = HttpStatusCode.BadRequest.ToString(),
+                    Message = "Password not match"
+                });
+            }
 
+            if (entities is "0")
+            {
+                return BadRequest(new ResponseHandler<LoginAccountDto>
+                {
+                    Code = StatusCodes.Status404NotFound,
+                    Status = HttpStatusCode.NotFound.ToString(),
+                    Message = "Email not found"
+                });
+            }
 
+            if (entities is "-2")
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, new ResponseHandler<LoginAccountDto>
+                {
+                    Code = StatusCodes.Status500InternalServerError,
+                    Status = HttpStatusCode.InternalServerError.ToString(),
+                    Message = "Error to database"
+                });
+            }
 
+            return Ok(new ResponseHandler<string>
+            {
+                Code = StatusCodes.Status200OK,
+                Status = HttpStatusCode.OK.ToString(),
+                Message = "Login success",
+                Data = entities
+            });
+        }
+
+        [HttpPut("change-password")]
+        [AllowAnonymous]
+        public IActionResult Update(ChangePasswordDto changePasswordDto)
+        {
+            var update = _service.ChangePassword(changePasswordDto);
+            if (update is -1)
+            {
+                return NotFound(new ResponseHandler<ChangePasswordDto>
+                {
+                    Code = StatusCodes.Status404NotFound,
+                    Status = HttpStatusCode.NotFound.ToString(),
+                    Message = "Email not Found"
+                });
+            }
+            if (update is 0)
+            {
+                return NotFound(new ResponseHandler<ChangePasswordDto>
+                {
+                    Code = StatusCodes.Status404NotFound,
+                    Status = HttpStatusCode.NotFound.ToString(),
+                    Message = "Otp doesn't match"
+                });
+            }
+            if (update is 1)
+            {
+                return NotFound(new ResponseHandler<ChangePasswordDto>
+                {
+                    Code = StatusCodes.Status404NotFound,
+                    Status = HttpStatusCode.NotFound.ToString(),
+                    Message = "Otp has been used"
+                });
+            }
+            if (update is 2)
+            {
+                return NotFound(new ResponseHandler<ChangePasswordDto>
+                {
+                    Code = StatusCodes.Status404NotFound,
+                    Status = HttpStatusCode.NotFound.ToString(),
+                    Message = "Otp alredy expired"
+                });
+            }
+            return Ok(new ResponseHandler<ChangePasswordDto>
+            {
+                Code = StatusCodes.Status200OK,
+                Status = HttpStatusCode.OK.ToString(),
+                Message = "Successfully updated"
+            });
+        }
 
     }
 }
