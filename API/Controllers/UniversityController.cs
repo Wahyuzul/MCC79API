@@ -3,13 +3,16 @@ using API.DTOs.Universities;
 using API.Models;
 using API.Services;
 using API.Utilities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Data;
 using System.Net;
 
 namespace API.Controllers;
 
 [ApiController]
 [Route("api/universities")]
+[Authorize(Roles = $"{nameof(RoleLevel.admin)}")]
 public class UniversityController : ControllerBase
 {
     private readonly UniversityService _service;
@@ -20,6 +23,7 @@ public class UniversityController : ControllerBase
     }
 
     [HttpGet]
+    [AllowAnonymous]
     public IActionResult GetAll()
     {
         var entities = _service.GetUniversity();
