@@ -1,7 +1,13 @@
 ﻿using API.Contracts;
+using API.Data;
 using API.DTOs.Accounts;
 using API.Models;
+using API.Repositories;
 using API.Utilities;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using System.Security.Claims;
+using static System.Net.WebRequestMethods;
 
 namespace API.Services
 {
@@ -11,13 +17,22 @@ namespace API.Services
         private readonly IEmployeeRepository _employeeRepository;
         private readonly IUniversityRepository _universityRepository;
         private readonly IEducationRepository _educationRepository;
-
-        public AccountService(IAccountRepository accountRepository, IEmployeeRepository employeeRepository, IUniversityRepository universityRepository, IEducationRepository educationRepository)
+        private readonly ITokenHandler _tokenHandler;
+        private readonly IAccountRoleRepository _accountRoleRepository;
+        private readonly IRoleRepository _roleRepository;
+        private readonly IEmailHandler _emailHandler;
+        private readonly BookingDbContext _dBContext;
+        public AccountService(IAccountRepository accountRepository, IEmployeeRepository employeeRepository, IUniversityRepository universityRepository, IEducationRepository educationRepository, ITokenHandler tokenHandler, IAccountRoleRepository accountRoleRepository, IRoleRepository roleRepository, IEmailHandler emailHandler, BookingDbContext dBContext)
         {
             _accountRepository = accountRepository;
             _employeeRepository = employeeRepository;
             _universityRepository = universityRepository;
             _educationRepository = educationRepository;
+            _tokenHandler = tokenHandler;
+            _accountRoleRepository = accountRoleRepository;
+            _roleRepository = roleRepository;
+            _emailHandler = emailHandler;
+            _dBContext = dBContext;
         }
 
         public IEnumerable<GetAccountDto>? GetAccount()
@@ -137,6 +152,7 @@ namespace API.Services
 
         public RegisterAccountDto? Register(RegisterAccountDto registerDto)
         {
+            //using var transaction = _dBContext.Database.BeginTransaction();
             if (registerDto.Password != registerDto.ConfirmPassword)
             {
                 return null;
@@ -157,24 +173,24 @@ namespace API.Services
                 CreatedDate = DateTime.Now,
                 ModifiedDate = DateTime.Now
             };
-
             var createdEmployee = _employeeRepository.Create(employee);
             if (createdEmployee is null)
             {
                 return null;
             }
 
-            University university = new University
+            var createdUniversity = _universityRepository.GetByCodeandName(registerDto.UniversityCode, registerDto.UniversityName);
+            if (createdUniversity == null)
             {
-                Guid = new Guid(),
-                Code = registerDto.UniversityCode,
-                Name = registerDto.UniversityName
-            };
-
-            var createdUniversity = _universityRepository.Create(university);
-            if (createdUniversity is null)
-            {
-                return null;
+                var university = new University
+                {
+                    Guid = new Guid(),
+                    Code = registerDto.UniversityCode,
+                    Name = registerDto.UniversityName,
+                    CreatedDate = DateTime.Now,
+                    ModifiedDate = DateTime.Now,
+                };
+                createdUniversity = _universityRepository.Create(university);
             }
 
             Education education = new Education
@@ -183,9 +199,8 @@ namespace API.Services
                 Major = registerDto.Major,
                 Degree = registerDto.Degree,
                 GPA = registerDto.Gpa,
-                UniversityGuid = university.Guid
+                UniversityGuid = createdUniversity.Guid
             };
-
             var createdEducation = _educationRepository.Create(education);
             if (createdEducation is null)
             {
@@ -197,10 +212,26 @@ namespace API.Services
                 Guid = employee.Guid,
                 Password = Hashing.HashPassword(registerDto.Password),
             };
-
-
             var createdAccount = _accountRepository.Create(account);
             if (createdAccount is null)
+            {
+                return null;
+            }
+
+            var roleUser = _roleRepository.GetByName("user");
+            if(roleUser is null)
+            {
+                return null;
+            }
+
+            var accountRole = new AccountRole
+            {
+                Guid = Guid.NewGuid(),
+                AccountGuid = createdAccount.Guid, 
+                RoleGuid =  roleUser.Guid
+            };
+            var createdUserAccountRole = _accountRoleRepository.Create(accountRole);
+            if (createdUserAccountRole is null)
             {
                 return null;
             }
@@ -222,8 +253,51 @@ namespace API.Services
                 UniversityName = createdUniversity.Name
             };
 
+           // transaction.Commit();
             return toDto;
         }
+
+        public string Login(LoginAccountDto login)
+        {
+            var emailEmp = _employeeRepository.GetEmail(login.Email);
+            if (emailEmp is null)
+            {
+                return "0";
+            }
+
+            var password = _accountRepository.GetByGuid(emailEmp.Guid);
+            var isValid = Hashing.ValidatePassword(login.Password, password!.Password);
+            if (!isValid)
+            {
+                return "-1";
+            }
+
+            
+
+            try
+            {
+                var claims = new List<Claim>() {
+                new Claim("NIK", emailEmp.NIK),
+                new Claim("FullName", $"{emailEmp.FirstName} {emailEmp.LastName}"),
+                new Claim("Email", login.Email)
+            };
+
+                var getAccountRole = _accountRoleRepository.GetAccountRolesByAccountGuid(emailEmp.Guid);
+                var getRoleNameByAccountRole = from ar in getAccountRole
+                                               join r in _roleRepository.GetAll() on ar.RoleGuid equals r.Guid
+                                               select r.Name;
+
+                claims.AddRange(getRoleNameByAccountRole.Select(role => new Claim(ClaimTypes.Role, role)));
+
+                var getToken = _tokenHandler.GenerateToken(claims);
+                return getToken;
+            }
+            catch
+            {
+                return "-2";
+            }
+        }
+
         public int GenerateOtp()
         {
 
@@ -233,39 +307,88 @@ namespace API.Services
 
         }
 
-        public ForgotPasswordDto ForgotPassword(string email)
+        public int ForgotPassword(ForgotPasswordDto forgotPassword)
         {
-            var employee = _employeeRepository.GetAll().SingleOrDefault(employee => employee.Email == email);
+            var employee = _employeeRepository.GetEmail(forgotPassword.Email);
             if (employee is null)
             {
-                return null;
+                return 0;
             }
 
             var toDto = new ForgotPasswordDto
             {
-                Email = employee.Email,
-                Otp = GenerateOtp(),
-                ExpireTime = DateTime.Now.AddMinutes(5)
+                Email = employee.Email
             };
 
             var relatedAccount = _accountRepository.GetByGuid(employee.Guid);
-
+            var otp = GenerateOtp();
             var updateAccountDto = new Account
             {
                 Guid = relatedAccount.Guid,
                 Password = relatedAccount.Password,
                 IsDeleted = (bool)relatedAccount.IsDeleted,
-                OTP = toDto.Otp,
+                OTP = otp,
                 IsUsed = false,
-                ExpiredDate = DateTime.Now.AddMinutes(5)
+                ExpiredDate = DateTime.Now.AddMinutes(5),
+                ModifiedDate = DateTime.Now
             };
 
             var updateResult = _accountRepository.Update(updateAccountDto);
 
-            return toDto;
+            _emailHandler.SendEmail(forgotPassword.Email,
+            "Forgot Password",
+                                $"Your OTP is {otp}");
+
+            return 1;
         }
 
+        public int ChangePassword(ChangePasswordDto changePasswordDto)
+        {
+            var isExist = _employeeRepository.GetEmail(changePasswordDto.Email);
+            if (isExist is null)
+            {
+                return -1; // Account not found
+            }
+
+            var getAccount = _accountRepository.GetByGuid(isExist.Guid);
+            if (getAccount.OTP != changePasswordDto.Otp)
+            {
+                return 0;
+            }
+
+            if (getAccount.IsUsed == true)
+            {
+                return 1;
+            }
+
+            if (getAccount.ExpiredDate < DateTime.Now)
+            {
+                return 2;
+            }
+
+            var account = new Account
+            {
+                Guid = getAccount.Guid,
+                IsUsed = getAccount.IsUsed,
+                IsDeleted = getAccount.IsDeleted,
+                ModifiedDate = DateTime.Now,
+                CreatedDate = getAccount!.CreatedDate,
+                OTP = getAccount.OTP,
+                ExpiredDate = getAccount.ExpiredDate,
+                Password = Hashing.HashPassword(changePasswordDto.NewPassword),
+            };
+
+            var isUpdate = _accountRepository.Update(account);
+            if (!isUpdate)
+            {
+                return 0; // Account not updated
+            }
+
+            return 3;
+        }
     }
+
 }
+
 
 
