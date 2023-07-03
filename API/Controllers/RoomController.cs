@@ -4,13 +4,16 @@ using API.DTOs.Universities;
 using API.Models;
 using API.Services;
 using API.Utilities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Data;
 using System.Net;
 
 namespace API.Controllers
 {
     [ApiController]
     [Route("api/rooms")]
+    [Authorize(Roles = $"{nameof(RoleLevel.admin)}")]
     public class RoomController : ControllerBase
     {
         private readonly RoomService _service;

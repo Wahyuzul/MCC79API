@@ -3,13 +3,16 @@ using API.DTOs.Employees;
 using API.Models;
 using API.Services;
 using API.Utilities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Data;
 using System.Net;
 
 namespace API.Controllers
 {
     [ApiController]
     [Route("api/employees")]
+    [Authorize(Roles = $"{nameof(RoleLevel.admin)}")]
     public class EmployeeController : ControllerBase
     {
         private readonly EmployeeService _service;
@@ -168,6 +171,7 @@ namespace API.Controllers
         }
 
         [HttpDelete]
+        [Authorize(Roles = $"{nameof(RoleLevel.admin)}")]
         public IActionResult Delete(Guid guid)
         {
             var delete = _service.DeleteEmployee(guid);

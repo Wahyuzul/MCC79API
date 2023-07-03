@@ -182,7 +182,7 @@ namespace API.Controllers
         }
 
         [HttpPost("forgot-password")]
-        [AllowAnonymous]
+        [Authorize(Roles = $"{nameof(RoleLevel.udmin)}")]
         public IActionResult ForgotPassword(ForgotPasswordDto forgotPassword)
         {
             var isUpdated = _service.ForgotPassword(forgotPassword);
