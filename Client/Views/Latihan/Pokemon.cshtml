@@ -1,0 +1,77 @@
+﻿@{
+    Layout = "_LayoutPokemon";
+}
+
+<div class="container">
+    <h1 id="judul" style="text-align:center;">Pokemon List</h1>
+    <table class="table table-fixed table-striped table-hover">
+        <thead class="table-primary">
+            <tr>
+                <th>No</th>
+                <th>Nama</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody id="tbodypoke">
+        </tbody>
+    </table>
+
+    <div class="modal" id="modalpoke" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header text-center">
+                    <h5 class="modal-title w-100">Pokemon Profile</h5>
+                </div>
+                <div class="modal-body">
+                    <div class="card">
+                        <div class="row g-0">
+                            <div class="col-md-4">
+                                <img src ="" class="img-fluid rounded-start" id="image">
+                                <div class="profile" style="display:flex; width: 100%;">
+                                    <div class="profile-left">
+                                        <p>Name :</p>
+                                        <p>Type :</p>
+                                        <p>Weight :</p>
+                                        <p>Height :</p>
+                                    </div>
+                                    <div class="profile-right" style="">
+                                        <p class="names" id="pokename"></p>
+                                        <span class="types"></span>
+                                        <p class="weight" style="margin-top:16px;"></p>
+                                        <p class="height"></p>
+                                    </div>
+                                </div>                    
+                            </div>
+                            <div class="col-md-8">
+                                <div class="card-body">
+                                    <ul class="nav nav-tabs" id="myTab" role="tablist" style="font-family: 'MUGEN Value', sans-serif;">
+                                        <li class="nav-item" role="presentation">
+                                            <button class="nav-link active" id="stats-tab" data-bs-toggle="tab" data-bs-target="#stats" type="button" role="tab" aria-controls="stats" aria-selected="true">Stats</button>
+                                        </li>
+                                        <li class="nav-item" role="presentation">
+                                            <button class="nav-link" id="abilities-tab" data-bs-toggle="tab" data-bs-target="#abilities" type="button" role="tab" aria-controls="home" aria-selected="false">Abilities</button>
+                                        </li>
+                                    </ul>
+                                    <div class="tab-content" id="myTabContent" style="font-family: 'MUGEN Value', sans-serif;">
+                                        <div class="tab-pane fade show active" id="stats" role="tabpanel" aria-labelledby="stats-tab">
+                                            <div>
+                                                <p class="stats"></p>
+                                            </div>
+                                        </div>
+                                        <div class="tab-pane fade" id="abilities" role="tabpanel" aria-labelledby="abilities-tab">
+                                            <p class="abilities"></p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>     
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="closebtn" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

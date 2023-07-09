@@ -1,0 +1,52 @@
+﻿h1{
+    margin-left: 150px;
+}
+
+.container {
+    position: relative;
+    left: 550px;
+
+    width: 450px;
+}
+
+.row {
+    margin: 10px;
+    border: 1px solid black;
+    width: 400px;
+    height: 100px;
+}
+
+#row1 {
+    background-color: aqua;
+    font-size: 25px;
+}
+
+#row3 {
+    text-align: center;
+    font-size: 35px;
+    height: 250px;
+} 
+
+#image{
+    top: 0px;
+    right: 200px;
+    width: 400px;
+    height: 250px;
+}
+
+.button {
+    margin-left: 170px;
+}
+
+#btn4{
+    margin-left: 150px;
+}
+
+
+
+
+
+
+
+
+

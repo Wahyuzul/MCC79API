@@ -1,0 +1,107 @@
+﻿body {
+    width: 100%;
+    background-image: url('https://e1.pxfuel.com/desktop-wallpaper/104/305/desktop-wallpaper-simple-pokemon-derpy-pikachu.jpg');
+}
+
+.container{
+    width:600px;
+    background-color:white;
+    margin-top:10px;
+    border-radius:15px
+}
+
+#judul {
+    font-family: 'Pokemon Solid', sans-serif;
+    font-size: 30px;
+    padding-bottom:3px;
+}
+
+.table {
+    font-family: 'MUGEN Value', sans-serif;
+}
+
+tbody {
+    display: block;
+    max-height: 550px;
+    overflow-y: scroll;
+}
+
+thead, tbody tr {
+    display: table;
+    width: 100%;
+    table-layout: fixed;
+}
+
+#actionbtn {
+    border-radius: 100px;
+    background-color: #e0e4f4;
+    width: 80px;
+}
+
+#image {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 100%;
+}
+
+.profile{
+    margin-left: 20px;
+}
+
+.profile-left {
+    font-family: 'MUGEN Value', sans-serif;
+}
+
+.profile-right {
+    font-family: 'MUGEN Value', sans-serif;
+    margin-left: 25px;
+}
+
+.modal-header {
+    background-color: #E54222;
+}
+
+h5.modal-title {
+    color: #FFCC00;
+    text-align: center;
+    font-family: 'Pokemon Solid', sans-serif;
+    text-shadow: 2px 2px 2px black, 2px 2px 2px black, 2px 2px 2px black, 2px 2px 2px black;
+}
+
+.modal-body {
+    background-color: #ededed;
+}
+
+#closebtn {
+    background-color: black;
+    font-family: 'MUGEN Value', sans-serif;
+}
+
+.card {
+    width: 100%;
+}
+
+.abilities {
+    text-align: center;
+    font-size: large;
+}
+
+.stats{
+    border-radius: 200px;
+}
+
+.nav-link.active {
+    color: #0075BE !important;
+}
+
+.nav-link:not(.active) {
+    color: black !important;
+
+}
+.list-group-item:first-child {
+    border-top: none;
+}
+
+
+
