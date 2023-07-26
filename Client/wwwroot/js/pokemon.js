@@ -1,4 +1,4 @@
-$.ajax({
+/*$.ajax({
     url: "https://pokeapi.co/api/v2/pokemon/"
 }).done((result) => {
     console.log(result);
@@ -11,7 +11,34 @@ $.ajax({
                 </tr>`;
     })
     $("#tbodypoke").html(temp);
-})
+})*/
+
+$(document).ready(function () {
+    $('#maintable').DataTable({
+        ajax: {
+            url: "https://pokeapi.co/api/v2/pokemon/?limit=100",
+            dataType: "JSON",
+            dataSrc: "results" //data source -> butuh array of object
+        },
+        columns: [
+            {
+                data: 'url',
+                render: function (data, type, row) {
+                    let number = data.split('/')[6];
+                    return number;
+                } },
+            { data: "name" },
+            {
+                data: null,
+                render: function (data, type, row) {
+                    return `<button onclick="detail('${data.url}')" data-bs-toggle="modal" data-bs-target="#modalpoke" class="btn btn-outline-dark" id="actionbtn">Detail</button>`;
+                }
+            }
+        ]
+    });
+});
+
+
 function detail(stringURL) {
     $.ajax({
         url: stringURL
@@ -41,7 +68,7 @@ function detail(stringURL) {
         let types = "";
         res.types.forEach((type) => {
             let typeColor = getTypeColor(type.type.name);
-            types += `<span class="badge rounded-pill" style="background-color:${typeColor}">${type.type.name}</span>`;
+            types += `<span class="badge rounded-pill align-middle" style="background-color:${typeColor}">${type.type.name}</span>`;
         });
         $(".types").html(types);
 
@@ -73,6 +100,39 @@ function getTypeColor(typeName) {
             break;
         case "bug":
             typeColor = "#A6B91A";
+            break;
+        case "fighting":
+            typeColor = "#C22E28";
+            break;
+        case "ground":
+            typeColor = "#E2BF65";
+            break;
+        case "rock":
+            typeColor = "#B6A136";
+            break;
+        case "steel":
+            typeColor = "#B7B7CE";
+            break;
+        case "electric":
+            typeColor = "#F7D02C";
+            break;
+        case "psychic":
+            typeColor = "#F95587";
+            break;
+        case "ice":
+            typeColor = "#96D9D6";
+            break;
+        case "ghost":
+            typeColor = "#735797";
+            break;
+        case "dragon":
+            typeColor = "#6F35FC";
+            break;
+        case "dark":
+            typeColor = "#705746";
+            break;
+        case "fairy":
+            typeColor = "#D685AD";
             break;
         default:
             typeColor = "#A8A77A";

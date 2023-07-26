@@ -15,5 +15,15 @@ namespace Client.Controllers
         {
             return View();
         }
+
+        public IActionResult Mcc79()
+        {
+            return View();
+        }
+
+        public IActionResult University()
+        {
+            return View();
+        }
     }
 }

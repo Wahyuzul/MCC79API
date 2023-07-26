@@ -1,0 +1,78 @@
+﻿    ﻿@{
+        Layout = null;
+    }
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Error 401 - Unauthorized</title>
+    <style>
+        body {
+            background-color: #f5f5f5;
+            font-family: Arial, sans-serif;
+        }
+
+        .container {
+            width: 500px;
+            margin: 100px auto;
+            padding: 40px;
+            background-color: #fff;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            border-radius: 5px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-top: 0;
+        }
+
+        p {
+            text-align: center;
+            color: #777;
+            margin-bottom: 0;
+        }
+
+        .emoji {
+            font-size: 48px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+            .emoji img {
+                width: 100px;
+                height: 100px;
+                vertical-align: middle;
+            }
+
+        .button {
+            display: block;
+            width: 200px;
+            margin: 20px auto 0;
+            padding: 10px 20px;
+            text-align: center;
+            background-color: #ff5851;
+            color: #fff;
+            font-size: 16px;
+            font-weight: bold;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+
+            .button:hover {
+                background-color: #ff6b65;
+            }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="emoji">
+            <img src="https://i.redd.it/silly-youtube-emotes-but-with-better-quality-v0-8w6g70oi39ha1.png?width=540&format=png&auto=webp&s=0482a36b8acbe91946cd92a7d91cc96723c043a8" alt="Error Emoji">
+        </div>
+        <h1>Error 401 - Unauthorized</h1>
+        <p>Oops! You must login first to continue access!!</p>
+        <a href="/Account/Login" class="button">Go back</a>
+    </div>
+</body>
+</html>

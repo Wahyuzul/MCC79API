@@ -13,7 +13,7 @@ namespace API.Controllers
 {
     [ApiController]
     [Route("api/roles")]
-    [Authorize(Roles = $"{nameof(RoleLevel.admin)}")]
+    //[Authorize(Roles = $"{nameof(RoleLevel.admin)}")]
     public class RoleController : ControllerBase
     {
         private readonly RoleService _service;

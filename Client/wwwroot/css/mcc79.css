@@ -1,0 +1,94 @@
+﻿body {
+    width: 100%;
+    background-color: #aecdf5;
+}
+
+.container {
+    width: 100%;
+    background-color: white;
+    margin-top: 25px;
+    border-radius: 15px
+}
+
+#judul {
+    font-family: 'MUGEN Value', sans-serif;
+    font-size: 33px;
+    padding-top: 15px;
+}
+
+.table {
+    font-family: 'MUGEN Value', sans-serif;
+    padding-top: 5px;
+    width: 100%;
+}
+
+/*th, td {
+    white-space: nowrap;
+}
+
+div.dataTables_wrapper {
+    width: 800px;
+    margin: 0 auto;
+}
+*/
+#actionbtn {
+    border-radius: 100px;
+    background-color: #e0e4f4;
+    width: 80px;
+}
+
+
+
+#maintable_wrapper div.dt-buttons button.dt-button.buttons-collection.buttons-colvis {
+    font-weight:700;
+    background-color: white;
+    color: black;
+    border-radius: 10px;
+    border-color: black;
+
+}
+
+#maintable_wrapper div.dt-buttons button.dt-button.buttons-copy.buttons-html5 {
+    font-weight: 700;
+    background-color: white;
+    color: black;
+    border-radius: 10px;
+    border-color: black;
+}
+
+#maintable_wrapper div.dt-buttons button.dt-button.buttons-print {
+    font-weight: 700;
+    background-color: white;
+    color: black;
+    border-radius: 10px;
+    border-color: black;
+}
+
+#maintable_wrapper div.dt-buttons button.dt-button.buttons-excel.buttons-html5.btn.btn-success {
+    font-weight: 700;
+    background-color: white;
+    color: forestgreen;
+    border-radius: 10px;
+    border-color: black;
+}
+
+#maintable_wrapper div.dt-buttons button.dt-button.buttons-pdf.buttons-html5 {
+    font-weight: 700;
+    background-color: white;
+    color: red;
+    border-radius: 10px;
+    border-color: black;
+}
+
+#maintable_filter {
+    font-family: 'MUGEN Value', sans-serif;
+    border-color: black;
+}
+
+#deleteBtn:hover{
+    color: red;
+}
+
+#maintable_wrapper div:nth-child(1) div.col-sm-5{
+    padding-bottom:5px;
+}

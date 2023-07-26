@@ -1,10 +1,11 @@
 ﻿using API.Utilities;
 using System.ComponentModel.DataAnnotations;
 
-namespace API.DTOs.Accounts
+namespace Client.ViewModel
 {
-    public class RegisterAccountDto
+    public class RegisterVM
     {
+
         [Required]
         public string FirstName { get; set; }
         public string? LastName { get; set; }
@@ -17,11 +18,11 @@ namespace API.DTOs.Accounts
         public DateTime HiringDate { get; set; }
         [Required]
         [EmailAddress]
-        //[EmployeeDuplicateProperty("string", "Email")]
+        [EmployeeDuplicateProperty("string", "Email")]
         public string Email { get; set; }
         [Required]
         [Phone]
-        //[EmployeeDuplicateProperty("string", "PhoneNumber")]
+        [EmployeeDuplicateProperty("string", "PhoneNumber")]
         public string PhoneNumber { get; set; }
         [Required]
         public string Major { get; set; }

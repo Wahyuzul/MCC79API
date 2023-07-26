@@ -1,0 +1,112 @@
+﻿@model IEnumerable<API.DTOs.Employees.GetEmployeeDto>
+@using Microsoft.AspNetCore.Identity
+
+
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "_HttpClient";
+    bool isAdmin = User.IsInRole("admin");
+}
+
+<h1>Employee List</h1>
+<hr />
+
+<a class="btn btn-danger" href="Account/Logout" style="float: right; margin-right:10px">Logout</a>
+
+@if (isAdmin)
+{
+    <a class="btn btn-primary" href="Employee/Create" style="float: right; margin-right:10px">Create</a>
+}
+
+
+<table class="table" id="indexTable">
+    <thead>
+        <tr>
+            <th hidden>
+                @Html.DisplayNameFor(model => model.Guid)
+            </th>
+            <th>
+                @Html.DisplayName("No")
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.NIK)
+            </th>
+            <th>
+                @Html.DisplayName("FullName")
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.BirthDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Gender)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.HiringDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Email)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PhoneNumber)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var (index, item) in Model.Select((value, i) => (i+1,value))) {
+        <tr>
+            @{
+                var culture = new System.Globalization.CultureInfo("id-ID");
+            }
+            <td>@index</td>
+            <td hidden>
+                @Html.DisplayFor(modelItem => item.Guid)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.NIK)
+            </td>
+            <td>
+                @{
+                    var fullName = $"{item.FirstName} {item.LastName}";
+                }
+                @Html.DisplayFor(x => fullName)
+            </td>
+            <td>
+                @{
+                    var formatBirthDate = item.BirthDate.ToString("dd MMMM yyyy", culture);
+                }
+                @Html.DisplayFor(modelItem => formatBirthDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Gender)
+            </td>
+            <td>
+                    @{
+                        var formatHiringDate = item.HiringDate.ToString("dd MMMM yyyy", culture);
+                    }
+                    @Html.DisplayFor(modelItem => formatHiringDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Email)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.PhoneNumber)
+            </td>
+            <td>
+                    @if (isAdmin)
+                    {
+                        <form action="/Employee/Edit" method="GET">
+                            <input type="hidden" value="@item.Guid" name="guid" />
+                            <input type="submit" value="Edit" class="btn btn-warning" / style="width: 84px;">
+                        </form>
+                        <form action="/Employee/Delete" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menghapus data ini?')">
+                            <input type="hidden" value="@item.Guid" name="guid" />
+                            <input type="submit" value="Delete" class="btn btn-danger" onclick="return true" style="margin-top:5px" />
+                        </form>
+                    }
+            
+        </tr>
+}
+    </tbody>
+</table>

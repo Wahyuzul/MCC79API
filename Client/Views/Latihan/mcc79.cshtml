@@ -1,0 +1,166 @@
+﻿@{
+    Layout = "_LayoutMcc79";
+}
+
+<div class="container">
+    <h1 id="judul" style="text-align:center;">Employee List</h1>
+    <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#modalemp1" style="float: right; margin-bottom:10px;">Create</button>
+    <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" onclick="showGenderChart()" style="float: right; margin-bottom:10px;">Chart</button>
+    <table class="table table-fixed table-striped table-hover" id="maintable">
+        <thead class="table-primary">
+            <tr>
+                <th>No</th>
+                <th>NIK</th>
+                <th>Nama</th>
+                <th>Birth Date</th>
+                <th>Gender</th>
+                <th>Hiring Date</th>
+                <th>Email</th>
+                <th>Phone</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody id="tbodyemp">
+
+        </tbody>
+    </table>
+
+    <div class="modal" tabindex="-1" id="modalemp1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Add Employee</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="firstName" class="form-label">First Name</label>
+                        <input type="text" class="form-control" id="firstName" placeholder="First Name">
+                    </div>
+                    <div class="mb-3">
+                        <label for="lastName" class="form-label">Last Name</label>
+                        <input type="text" class="form-control" id="lastName" placeholder="Last Name">
+                    </div>
+                    <div class="mb-3">
+                        <label for="birthDate" class="form-label">Birth Date</label>
+                        <input type="date" class="form-control" id="birthDate">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label"> Gender</label>
+                        <br />
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="gender" id="femaleRadio" value="Female" checked>
+                            <label class="form-check-label" for="femaleRadio">
+                                Female
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="gender" id="maleRadio" value="Male">
+                            <label class="form-check-label" for="maleRadio">
+                                Male
+                            </label>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="hiringDate" class="form-label">Hiring Date</label>
+                        <input type="date" class="form-control" id="hiringDate">
+                    </div>
+                    <div class="mb-3">
+                        <label for="email" class="form-label">Email address</label>
+                        <input type="email" class="form-control" id="email" placeholder="name@example.com">
+                    </div>
+                    <div class="mb-3">
+                        <label for="phone" class="form-label">Phone Number</label>
+                        <input type="tel" class="form-control" id="phone">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary" onclick="Insert()">Create</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" tabindex="-1" id="modalemp2">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Update Employee</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                     <input type="hidden" class="form-control" id="guidUpd" value="">
+                     <input type="hidden" class="form-control" id="nikUpd" value="">
+                    <div class="mb-3">
+                        <label for="firstNameUpd" class="form-label">First Name</label>
+                        <input type="text" class="form-control" id="firstNameUpd" placeholder="First Name">
+                    </div>
+                    <div class="mb-3">
+                        <label for="lastNameUpd" class="form-label">Last Name</label>
+                        <input type="text" class="form-control" id="lastNameUpd" placeholder="Last Name">
+                    </div>
+                    <div class="mb-3">
+                        <label for="birthDateUpd" class="form-label">Birth Date</label>
+                        <input type="date" class="form-control" id="birthDateUpd">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label"> Gender</label>
+                        <br />
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="gender" id="femaleRadio2" value="Female" checked>
+                            <label class="form-check-label" for="femaleRadio">
+                                Female
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="gender" id="maleRadio2" value="Male">
+                            <label class="form-check-label" for="maleRadio">
+                                Male
+                            </label>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="hiringDateUpd" class="form-label">Hiring Date</label>
+                        <input type="date" class="form-control" id="hiringDateUpd">
+                    </div>
+                    <div class="mb-3">
+                        <label for="emailUpd" class="form-label">Email address</label>
+                        <input type="email" class="form-control" id="emailUpd" placeholder="name@example.com">
+                    </div>
+                    <div class="mb-3">
+                        <label for="phoneUpd" class="form-label">Phone Number</label>
+                        <input type="tel" class="form-control" id="phoneUpd">
+                    </div>
+                </div>
+               
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary" onclick="SaveUpdate()">Save changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" tabindex="-1" id="modalChart">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Gender Chart</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="chart-container">
+                        <canvas id="genderChart"></canvas>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+</div>
+

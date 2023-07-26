@@ -12,7 +12,7 @@ using System.Net;
 namespace API.Controllers
 {
     [ApiController]
-    [Route("api/account")]
+    [Route("api/accounts")]
     [Authorize(Roles = $"{nameof(RoleLevel.admin)}")]
     public class AccountController : ControllerBase
     {

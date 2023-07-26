@@ -19,9 +19,10 @@
 
 .table {
     font-family: 'MUGEN Value', sans-serif;
+    padding-top: 5px;
 }
 
-tbody {
+/*tbody {
     display: block;
     max-height: 550px;
     overflow-y: scroll;
@@ -31,7 +32,7 @@ thead, tbody tr {
     display: table;
     width: 100%;
     table-layout: fixed;
-}
+}*/
 
 #actionbtn {
     border-radius: 100px;
